@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-import re, sys, time
+import re, sys, time, argparse
 from matplotlib import pyplot
 
 def parseLine(l):
@@ -52,10 +52,15 @@ def plot(a0, a1):
     a1.set_xlabel('time (seconds)')
     a1.set_ylabel('heater')
 
+parser = argparse.ArgumentParser(description='Plot thermostat data.')
+parser.add_argument('file', type=str, help='the thermostat log file')
+parser.add_argument('--live', action='store_true', help='update the plot when new data is written to the log file')
+args = parser.parse_args()
+
 times, values, heater, lowerBound, upperBound = [], [], [], [], []
 first = True
 lines = 0
-with open(sys.argv[1], 'r') as f:
+with open(args.file, 'r') as f:
     for l in f:
         parseLine(l)
         lines += 1
@@ -65,11 +70,10 @@ plot(a0, a1)
 
 f.tight_layout()
 
-live = True
-if live:
+if args.live:
     pyplot.draw()
     pyplot.pause(.01)
-    with open(sys.argv[1], 'r') as f:
+    with open(args.file, 'r') as f:
         for _ in range(lines):
             f.readline()
         while True:
