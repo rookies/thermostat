@@ -1,36 +1,66 @@
 #!/usr/bin/python3
-import re, sys
+import re, sys, time
 from matplotlib import pyplot
+
+def parseLine(l):
+    global first, times, values, heater
+    if re.match(r'^[0-9]+,[0-9]+\.[0-9]+,[A-Z]+$', l) is not None:
+        if first:
+            first = False
+            # Skip first value, it may be corrupted.
+        else:
+            parts = l.split(',')
+            time = float(parts[0]) / 1000
+            times.append(time)
+            val = float(parts[1])
+            values.append(val)
+            if parts[2].find('ON') != -1:
+                heater.append(1)
+            else:
+                heater.append(0)
+
+def plot(a0, a1):
+    global times, values, heater
+    a0.plot(times, values)
+    a0.grid(which='both')
+    a0.set_xlabel('time (seconds)')
+    a0.set_ylabel('temperature (centigrade)')
+
+    a1.plot(times, heater)
+    a1.grid(which='both')
+    a1.set_xlabel('time (seconds)')
+    a1.set_ylabel('heater')
 
 times, values, heater = [], [], []
 first = True
+lines = 0
 with open(sys.argv[1], 'r') as f:
     for l in f:
-        if re.match(r'^[0-9]+,[0-9]+\.[0-9]+,[A-Z]+$', l) is not None:
-            if first:
-                first = False
-                # Skip first value, it may be corrupted.
-            else:
-                parts = l.split(',')
-                time = float(parts[0]) / 1000
-                times.append(time)
-                val = float(parts[1])
-                values.append(val)
-                if parts[2].find('ON') != -1:
-                    heater.append(1)
-                else:
-                    heater.append(0)
+        parseLine(l)
+        lines += 1
 
 f, (a0, a1) = pyplot.subplots(2, 1, gridspec_kw = {'height_ratios':[3,1]})
-a0.plot(times, values)
-a0.grid(which='both')
-a0.set_xlabel('time (seconds)')
-a0.set_ylabel('temperature (centigrade)')
-
-a1.plot(times, heater)
-a1.grid(which='both')
-a1.set_xlabel('time (seconds)')
-a1.set_ylabel('heater')
+plot(a0, a1)
 
 f.tight_layout()
-pyplot.show()
+
+live = True
+if live:
+    pyplot.draw()
+    pyplot.pause(.01)
+    with open(sys.argv[1], 'r') as f:
+        for _ in range(lines):
+            f.readline()
+        while True:
+            l = f.readline()
+            if not l:
+                time.sleep(1)
+            else:
+                parseLine(l)
+                a0.clear()
+                a1.clear()
+                plot(a0, a1)
+                pyplot.draw()
+                pyplot.pause(.01)
+else:
+    pyplot.show()
