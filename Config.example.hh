@@ -1,9 +1,9 @@
 #ifndef Config_hh
 #define Config_hh
 
-/* Lower and upper temperature bound: */
-const float lowerBound = 40;
-const float upperBound = 50;
+/* Default lower and upper temperature bound: */
+float lowerBound = -300;
+float upperBound = -300;
 
 /* Interval to check the temperature: */
 const unsigned long interval = 2000;

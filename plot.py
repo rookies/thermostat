@@ -3,7 +3,7 @@ import re, sys, time
 from matplotlib import pyplot
 
 def parseLine(l):
-    global first, times, values, heater
+    global first, times, values, heater, lowerBound, upperBound
     if re.match(r'^[0-9]+,[0-9]+\.[0-9]+,[A-Z]+$', l) is not None:
         if first:
             first = False
@@ -18,10 +18,31 @@ def parseLine(l):
                 heater.append(1)
             else:
                 heater.append(0)
+    elif re.match(r'^[0-9]+,[0-9]+\.[0-9]+,[0-9]+\.[0-9]+,[0-9]+\.[0-9]+,[A-Z]+$', l) is not None:
+        if first:
+            first = False
+            # Skip first value, it may be corrupted.
+        else:
+            parts = l.split(',')
+            time = float(parts[0]) / 1000
+            times.append(time)
+            val = float(parts[1])
+            values.append(val)
+            low = float(parts[2])
+            lowerBound.append(low)
+            up = float(parts[3])
+            upperBound.append(up)
+            if parts[4].find('ON') != -1:
+                heater.append(1)
+            else:
+                heater.append(0)
 
 def plot(a0, a1):
-    global times, values, heater
-    a0.plot(times, values)
+    global times, values, heater, lowerBound, upperBound
+    a0.plot(times,values)
+    if len(lowerBound) > 0:
+        a0.plot(times, lowerBound)
+        a0.plot(times, upperBound)
     a0.grid(which='both')
     a0.set_xlabel('time (seconds)')
     a0.set_ylabel('temperature (centigrade)')
@@ -31,7 +52,7 @@ def plot(a0, a1):
     a1.set_xlabel('time (seconds)')
     a1.set_ylabel('heater')
 
-times, values, heater = [], [], []
+times, values, heater, lowerBound, upperBound = [], [], [], [], []
 first = True
 lines = 0
 with open(sys.argv[1], 'r') as f:
