@@ -10,8 +10,8 @@ float upperBound = -300;
 const unsigned long interval = 2000;
 
 /* Pin configuration: */
-const int senderPin = 15;
-const int sensorPin = 2;
+const int senderPin = 2;
+const int sensorPin = 8;
 
 /* Transmitter configuration: */
 const int protocol = 6;

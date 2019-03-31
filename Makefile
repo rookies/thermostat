@@ -1,10 +1,10 @@
 SKETCH    := thermostat.ino
 LIBRARIES := rc-switch OneWire DallasTemperature
 BAUDRATE  := 86400
-BOARD     ?= arduino:avr:mega
+BOARD     ?= arduino:avr:nano:cpu=atmega328old
 ARDUINO   ?= arduino-cli
 PICOCOM   ?= picocom
-PORT      ?= /dev/ttyACM3
+PORT      ?= /dev/ttyUSB0
 LIB_DIR   ?= ~/Arduino/libraries
 
 SRC    := $(SKETCH) \
