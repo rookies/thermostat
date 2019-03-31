@@ -13,10 +13,12 @@ char command[commandMaxLength+1];
 byte commandLength = 0;
 
 void on() {
+  digitalWrite(LED_BUILTIN, HIGH);
   rcSwitch.send(onCmd);
 }
 
 void off() {
+  digitalWrite(LED_BUILTIN, LOW);
   rcSwitch.send(offCmd);
 }
 
@@ -29,6 +31,8 @@ void setup() {
   rcSwitch.setPulseLength(pulseLength);
   /* Init the sensor: */
   sensors.begin();
+  /* Set the LED as output: */
+  pinMode(LED_BUILTIN, OUTPUT);
   /* Turn the heater off: */
   off();
 }
