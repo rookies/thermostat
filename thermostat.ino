@@ -24,7 +24,7 @@ void off() {
 
 void setup() {
   /* Init the serial port: */
-  Serial.begin(86400);
+  Serial.begin(9600);
   /* Init the transmitter: */
   rcSwitch.enableTransmit(senderPin);
   rcSwitch.setProtocol(protocol);
@@ -48,7 +48,7 @@ void loop() {
         /* Abort command: */
         command[commandLength] = '\0';
         commandLength = 0;
-        Serial.print(F("INFO: Aborted command '"));
+        Serial.print(F("INFO:Aborted command '"));
         Serial.print(command);
         Serial.println(F("'."));
       } else {
@@ -59,32 +59,35 @@ void loop() {
     } else {
       /* Command received, parse it: */
       command[commandLength] = '\0';
-      commandLength = 0;
       char *comma = strchr(command, ',');
       if (comma) {
         *comma = '\0';
         lowerBound = atoi(command) / 100.;
         upperBound = atoi(comma + 1) / 100.;
-        Serial.print(F("INFO: Set bounds to: "));
+        Serial.print(F("INFO:Set bounds to "));
         Serial.print(lowerBound);
         Serial.print(F(","));
         Serial.println(upperBound);
-      } else {
-        /* Invalid command. */
-        Serial.print(F("WARNING: Invalid command '"));
+      } else if (commandLength != 0) {
+        /* Invalid and non-empty command. */
+        Serial.print(F("WARNING:Invalid command '"));
         Serial.print(command);
         Serial.println(F("'."));
       }
+      commandLength = 0;
     }
   }
   /* Check if thermostat is enabled: */
   if (lowerBound < -270 && upperBound < -270) {
+    Serial.println(F("STATUS:OFF"));
+    delay(interval);
     return;
   }
   /* Get the temperature: */
   sensors.requestTemperatures();
   float temp = sensors.getTempCByIndex(0);
   /* Print time & temperature: */
+  Serial.print(F("STATUS:"));
   Serial.print(millis());
   Serial.print(F(","));
   Serial.print(temp);
@@ -120,7 +123,7 @@ void loop() {
     delay(interval - duration);
   } else if (duration > interval) {
     /* We didn't, print a warning: */
-    Serial.print(F("WARNING: Interval not met! (interval="));
+    Serial.print(F("WARNING:Interval not met (interval="));
     Serial.print(interval);
     Serial.print(F("ms, duration="));
     Serial.print(duration);
