@@ -155,8 +155,11 @@ class Main:
             # Set status:
             with self._serialLock:
                 statusText = self._serialData['status']
-            if (len(t) > 0) and (statusText != 'disabled'):
-                statusText += ', %.2f, %.2f, %.2f' % (Tc[-1], Tl[-1], Th[-1])
+            if len(t) > 0:
+                statusText += ', %s, %s, %s' % (
+                    '%.2f' % Tc[-1] if Tc[-1] is not None else '-',
+                    '%.2f' % Tl[-1] if Tl[-1] is not None else '-',
+                    '%.2f' % Th[-1] if Th[-1] is not None else '-')
             axs[4].text(0, 0, statusText)
 
             # Draw plots:
