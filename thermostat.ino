@@ -40,6 +40,7 @@ void setup() {
 void loop() {
   /* Remember when we started to calculate the duration: */
   unsigned long start = millis();
+
   /* Check for new data on the serial bus: */
   while (Serial.available() > 0) {
     char chr = Serial.read();
@@ -77,15 +78,11 @@ void loop() {
       commandLength = 0;
     }
   }
-  /* Check if thermostat is enabled: */
-  if (lowerBound < -270 && upperBound < -270) {
-    Serial.println(F("STATUS:OFF"));
-    delay(interval);
-    return;
-  }
+
   /* Get the temperature: */
   sensors.requestTemperatures();
   float temp = sensors.getTempCByIndex(0);
+
   /* Print time & temperature: */
   Serial.print(F("STATUS:"));
   Serial.print(millis());
@@ -96,26 +93,33 @@ void loop() {
   Serial.print(F(","));
   Serial.print(upperBound);
   Serial.print(F(","));
-  /* Check what we need to do: */
-  if (temp < lowerBound && !turnedOn) {
-    /* Switch the heater on. */
-    Serial.println(F("SWITCHON"));
-    on();
-    turnedOn = true;
-  } else if (temp > upperBound && turnedOn) {
-    /* Switch the heater off. */
-    Serial.println(F("SWITCHOFF"));
-    off();
-    turnedOn = false;
-  } else if (turnedOn) {
-    /* Keep the heater turned on. */
-    Serial.println(F("STAYON"));
-    on();
+
+  /* Check if thermostat is enabled: */
+  if (lowerBound >= -270 && upperBound >= -270) {
+    /* Check what we need to do: */
+    if (temp < lowerBound && !turnedOn) {
+      /* Switch the heater on. */
+      Serial.println(F("SWITCHON"));
+      on();
+      turnedOn = true;
+    } else if (temp > upperBound && turnedOn) {
+      /* Switch the heater off. */
+      Serial.println(F("SWITCHOFF"));
+      off();
+      turnedOn = false;
+    } else if (turnedOn) {
+      /* Keep the heater turned on. */
+      Serial.println(F("STAYON"));
+      on();
+    } else {
+      /* Keep the heater turned off. */
+      Serial.println(F("STAYOFF"));
+      off();
+    }
   } else {
-    /* Keep the heater turned off. */
-    Serial.println(F("STAYOFF"));
-    off();
+    Serial.println(F("DISABLED"));
   }
+
   /* Calculate duration and check if we met our interval: */
   unsigned long duration = millis() - start;
   if (duration < interval) {

@@ -6,6 +6,7 @@ import serial
 from matplotlib import pyplot, widgets, gridspec
 
 # TODO: Write logfile.
+# TODO: Function to resume from logfile.
 
 
 class SerialThread(threading.Thread):
@@ -37,36 +38,37 @@ class SerialThread(threading.Thread):
             if line == '':
                 pass
             elif line.startswith('STATUS:'):
-                status = line[7:]
-                if status == 'OFF':
-                    # STATUS:OFF
-                    with self._lock:
-                        self._data['status'] = 'off'
+                # STATUS:timestamp,current,lowerLimit,upeerLimit,status
+                parts = line[7:].split(',')
+
+                # Parse status:
+                if parts[4] == 'SWITCHON' or parts[4] == 'STAYON':
+                    textStatus = 'on'
+                    status = 1
+                elif parts[4] == 'SWITCHOFF' or parts[4] == 'STAYOFF':
+                    textStatus = 'off'
+                    status = 0
+                elif parts[4] == 'DISABLED':
+                    textStatus = 'disabled'
+                    status = 0
                 else:
-                    # STATUS:timestamp,current,lowerLimit,upeerLimit,status
-                    parts = status.split(',')
+                    textStatus = 'invalid'
+                    status = None
 
-                    # Parse status:
-                    if parts[4] == 'SWITCHON' or parts[4] == 'STAYON':
-                        textStatus = 'on'
-                        status = 1
-                    elif parts[4] == 'SWITCHOFF' or parts[4] == 'STAYOFF':
-                        textStatus = 'off'
-                        status = 0
-                    else:
-                        textStatus = 'invalid'
-                        status = None
+                # Store data:
+                with self._lock:
+                    self._data['status'] = textStatus
+                    limits = float(parts[2]), float(parts[3])
+                    if (limits[0] < -270) or (limits[1] < -270):
+                        limits = None, None
 
-                    # Store data:
-                    with self._lock:
-                        self._data['status'] = textStatus
-                        self._data['history'].append((
-                            int(parts[0]),    # timestamp
-                            float(parts[1]),  # currentTemp
-                            float(parts[2]),  # lowerTempLimit
-                            float(parts[3]),  # upperTempLimit
-                            status,           # status
-                        ))
+                    self._data['history'].append((
+                        int(parts[0]),    # timestamp
+                        float(parts[1]),  # currentTemp
+                        limits[0],        # lowerTempLimit
+                        limits[1],        # upperTempLimit
+                        status,           # status
+                    ))
             else:
                 # different message
                 with self._lock:
@@ -151,10 +153,10 @@ class Main:
             axs[1].set_yticklabels(['off', 'on'])
 
             # Set status:
-            if len(t) > 0:
-                statusText = '%.2f, %.2f, %.2f' % (Tc[-1], Tl[-1], Th[-1])
-            else:
-                statusText = 'unknown'
+            with self._serialLock:
+                statusText = self._serialData['status']
+            if (len(t) > 0) and (statusText != 'disabled'):
+                statusText += ', %.2f, %.2f, %.2f' % (Tc[-1], Tl[-1], Th[-1])
             axs[4].text(0, 0, statusText)
 
             # Draw plots:
