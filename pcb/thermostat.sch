@@ -1,0 +1,192 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Device:R R1
+U 1 1 5C7B94B3
+P 6650 1900
+F 0 "R1" H 6720 1946 50  0000 L CNN
+F 1 "4k7" H 6720 1855 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 6580 1900 50  0001 C CNN
+F 3 "~" H 6650 1900 50  0001 C CNN
+	1    6650 1900
+	1    0    0    -1  
+$EndComp
+$Comp
+L thermostat-rescue:Arduino_Nano_v3.x-MCU_Module A1
+U 1 1 5C7B98BC
+P 7750 2550
+F 0 "A1" H 7850 1450 50  0000 C CNN
+F 1 "Arduino_Nano_v3.x" H 7750 1373 50  0000 C CNN
+F 2 "Module:Arduino_Nano" H 7900 1600 50  0001 L CNN
+F 3 "http://www.mouser.com/pdfdocs/Gravitech_Arduino_Nano3_0.pdf" H 7750 1550 50  0001 C CNN
+	1    7750 2550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:Conn_01x03_Female J2
+U 1 1 5C7BBD1E
+P 6100 2600
+F 0 "J2" H 5994 2275 50  0000 C CNN
+F 1 "SENSOR2" H 5994 2366 50  0000 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x03_P2.54mm_Vertical" H 6100 2600 50  0001 C CNN
+F 3 "~" H 6100 2600 50  0001 C CNN
+	1    6100 2600
+	-1   0    0    1   
+$EndComp
+$Comp
+L Connector:Conn_01x03_Female J1
+U 1 1 5C7BBEA6
+P 6100 2050
+F 0 "J1" H 5994 1725 50  0000 C CNN
+F 1 "SENSOR1" H 5994 1816 50  0000 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x03_P2.54mm_Vertical" H 6100 2050 50  0001 C CNN
+F 3 "~" H 6100 2050 50  0001 C CNN
+	1    6100 2050
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR0101
+U 1 1 5C7BC0C9
+P 7750 3550
+F 0 "#PWR0101" H 7750 3300 50  0001 C CNN
+F 1 "GND" H 7650 3550 50  0000 C CNN
+F 2 "" H 7750 3550 50  0001 C CNN
+F 3 "" H 7750 3550 50  0001 C CNN
+	1    7750 3550
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR0102
+U 1 1 5C7BC116
+P 7950 1550
+F 0 "#PWR0102" H 7950 1400 50  0001 C CNN
+F 1 "+5V" H 7965 1723 50  0000 C CNN
+F 2 "" H 7950 1550 50  0001 C CNN
+F 3 "" H 7950 1550 50  0001 C CNN
+	1    7950 1550
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0103
+U 1 1 5C7BC2E4
+P 6300 1950
+F 0 "#PWR0103" H 6300 1700 50  0001 C CNN
+F 1 "GND" V 6305 1822 50  0000 R CNN
+F 2 "" H 6300 1950 50  0001 C CNN
+F 3 "" H 6300 1950 50  0001 C CNN
+	1    6300 1950
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR0104
+U 1 1 5C7BC31E
+P 6300 2500
+F 0 "#PWR0104" H 6300 2250 50  0001 C CNN
+F 1 "GND" V 6305 2372 50  0000 R CNN
+F 2 "" H 6300 2500 50  0001 C CNN
+F 3 "" H 6300 2500 50  0001 C CNN
+	1    6300 2500
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:+5V #PWR0105
+U 1 1 5C7BC3D5
+P 6300 2050
+F 0 "#PWR0105" H 6300 1900 50  0001 C CNN
+F 1 "+5V" V 6315 2178 50  0000 L CNN
+F 2 "" H 6300 2050 50  0001 C CNN
+F 3 "" H 6300 2050 50  0001 C CNN
+	1    6300 2050
+	0    1    1    0   
+$EndComp
+$Comp
+L power:+5V #PWR0106
+U 1 1 5C7BC407
+P 6300 2600
+F 0 "#PWR0106" H 6300 2450 50  0001 C CNN
+F 1 "+5V" V 6315 2728 50  0000 L CNN
+F 2 "" H 6300 2600 50  0001 C CNN
+F 3 "" H 6300 2600 50  0001 C CNN
+	1    6300 2600
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	6300 2150 6650 2150
+Wire Wire Line
+	6650 2700 6300 2700
+Wire Wire Line
+	6650 2150 6650 2050
+Connection ~ 6650 2150
+$Comp
+L power:+5V #PWR0107
+U 1 1 5C7BC62D
+P 6650 1700
+F 0 "#PWR0107" H 6650 1550 50  0001 C CNN
+F 1 "+5V" H 6665 1873 50  0000 C CNN
+F 2 "" H 6650 1700 50  0001 C CNN
+F 3 "" H 6650 1700 50  0001 C CNN
+	1    6650 1700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6650 1700 6650 1750
+Wire Wire Line
+	6650 2150 6650 2700
+$Comp
+L Connector:Conn_01x03_Female J3
+U 1 1 5C7BC815
+P 6100 3150
+F 0 "J3" H 5994 2825 50  0000 C CNN
+F 1 "SENDER" H 5994 2916 50  0000 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x03_P2.54mm_Vertical" H 6100 3150 50  0001 C CNN
+F 3 "~" H 6100 3150 50  0001 C CNN
+	1    6100 3150
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR0108
+U 1 1 5C7BC991
+P 6300 3250
+F 0 "#PWR0108" H 6300 3000 50  0001 C CNN
+F 1 "GND" V 6305 3122 50  0000 R CNN
+F 2 "" H 6300 3250 50  0001 C CNN
+F 3 "" H 6300 3250 50  0001 C CNN
+	1    6300 3250
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:+5V #PWR0109
+U 1 1 5C7BC9D8
+P 6300 3150
+F 0 "#PWR0109" H 6300 3000 50  0001 C CNN
+F 1 "+5V" V 6315 3278 50  0000 L CNN
+F 2 "" H 6300 3150 50  0001 C CNN
+F 3 "" H 6300 3150 50  0001 C CNN
+	1    6300 3150
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	6650 2150 7250 2150
+Wire Wire Line
+	6750 3050 6750 2250
+Wire Wire Line
+	6750 2250 7250 2250
+Wire Wire Line
+	6300 3050 6750 3050
+Wire Wire Line
+	7850 3550 7750 3550
+Connection ~ 7750 3550
+$EndSCHEMATC
