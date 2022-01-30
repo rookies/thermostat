@@ -118,6 +118,7 @@ void loop() {
     }
   } else {
     Serial.println(F("DISABLED"));
+    off();
   }
 
   /* Calculate duration and check if we met our interval: */
